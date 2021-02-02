@@ -6,3 +6,6 @@
 #define I(x, y, z) (y ^ (x | ~z))
 
 #define ROTATE_LEFT(x, s) (x<<s | x>>(32-s))
+
+#define STEP(f, a, b, c, d, x, t, s)  \
+    ( a += f(b, c, d) + x + t, a = ROTATE_LEFT(a, s), a += b )

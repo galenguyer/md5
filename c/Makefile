@@ -1,2 +1,2 @@
 test: md5.c test.c
-	gcc md5.c test.c -o test
+	gcc -std=c99 md5.c test.c -o test

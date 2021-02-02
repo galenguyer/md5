@@ -11,6 +11,17 @@ int run_test(char* name, long expected, long result) {
     }
 }
 
+#define REFERENCE_F(x, y, z) (((x) & (y)) | ((~x) & (z)))
+#define REFERENCE_G(x, y, z) (((x) & (z)) | ((y) & (~z)))
+#define REFERENCE_H(x, y, z) ((x) ^ (y) ^ (z))
+#define REFERENCE_I(x, y, z) ((y) ^ ((x) | (~z)))
+#define REFERENCE_ROTATE_LEFT(x, n) (((x) << (n)) | ((x) >> (32-(n))))
+#define REFERENCE_FF(a, b, c, d, x, s, ac) ( \
+    (a) += REFERENCE_F ((b), (c), (d)) + (x) + (unsigned long int)(ac), \
+    (a) = REFERENCE_ROTATE_LEFT ((a), (s)), \
+    (a) += (b) \
+)
+
 int main(int argc, char** argv) {
     int passed = 0, failed = 0;
     // compare core steps against RFC implementation
@@ -21,6 +32,11 @@ int main(int argc, char** argv) {
 
     // compare ROTATE_LEFT against RFC implementation
     run_test("rotate_left", ROTATE_LEFT(24, 2), (((24) << (2)) | ((24) >> (32-(2))))) ? passed++ : failed++;
+
+    // compare steps
+    int a = 1;
+    int ref_a = 1;
+    run_test("FF", STEP(F, a, 2, 3, 4, 5, 6, 7), REFERENCE_FF(ref_a, 2, 3, 4, 5, 6, 7)) ? passed++ : failed++;
 
     printf("Tests Passed: %i\n", passed);
     printf("Tests Failed: %i\n", failed);
