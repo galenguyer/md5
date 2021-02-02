@@ -18,6 +18,8 @@ int main(int argc, char** argv) {
     run_test("step H", H(1, 2, 3), ((1) ^ (2) ^ (3))) ? passed++ : failed++;
     run_test("step I", I(1, 2, 3), ((2) ^ ((1) | (~3)))) ? passed++ : failed++;
 
+    run_test("rotate_left", ROTATE_LEFT(24, 2), (((24) << (2)) | ((24) >> (32-(2))))) ? passed++ : failed++;
+
     printf("Tests Passed: %i\n", passed);
     printf("Tests Failed: %i\n", failed);
     return failed;

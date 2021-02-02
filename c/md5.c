@@ -5,4 +5,4 @@
 #define H(x, y, z) (x ^ y ^ z)
 #define I(x, y, z) (y ^ (x | ~z))
 
-#define ROTATE_LEFT(x, s) (x = x<<s | x>>(32-s))
+#define ROTATE_LEFT(x, s) (x<<s | x>>(32-s))
