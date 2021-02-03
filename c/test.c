@@ -46,6 +46,21 @@ documentation and/or software.
     (a) = REFERENCE_ROTATE_LEFT ((a), (s)), \
     (a) += (b) \
 )
+#define REFERENCE_GG(a, b, c, d, x, s, ac) ( \
+    (a) += REFERENCE_G ((b), (c), (d)) + (x) + (unsigned long int)(ac), \
+    (a) = REFERENCE_ROTATE_LEFT ((a), (s)), \
+    (a) += (b) \
+)
+#define REFERENCE_HH(a, b, c, d, x, s, ac) ( \
+    (a) += REFERENCE_H ((b), (c), (d)) + (x) + (unsigned long int)(ac), \
+    (a) = REFERENCE_ROTATE_LEFT ((a), (s)), \
+    (a) += (b) \
+)
+#define REFERENCE_II(a, b, c, d, x, s, ac) ( \
+    (a) += REFERENCE_I ((b), (c), (d)) + (x) + (unsigned long int)(ac), \
+    (a) = REFERENCE_ROTATE_LEFT ((a), (s)), \
+    (a) += (b) \
+)
 
 int main(int argc, char** argv) {
     int passed = 0, failed = 0;
@@ -62,6 +77,9 @@ int main(int argc, char** argv) {
     int a = 1;
     int ref_a = 1;
     run_test("FF", STEP(F, a, 2, 3, 4, 5, 6, 7), REFERENCE_FF(ref_a, 2, 3, 4, 5, 6, 7)) ? passed++ : failed++;
+    run_test("GG", STEP(G, a, 2, 3, 4, 5, 6, 7), REFERENCE_GG(ref_a, 2, 3, 4, 5, 6, 7)) ? passed++ : failed++;
+    run_test("HH", STEP(H, a, 2, 3, 4, 5, 6, 7), REFERENCE_HH(ref_a, 2, 3, 4, 5, 6, 7)) ? passed++ : failed++;
+    run_test("II", STEP(I, a, 2, 3, 4, 5, 6, 7), REFERENCE_II(ref_a, 2, 3, 4, 5, 6, 7)) ? passed++ : failed++;
 
     printf("Tests Passed: %i\n", passed);
     printf("Tests Failed: %i\n", failed);
