@@ -91,6 +91,7 @@ documentation and/or software.
 
 int main(int argc, char** argv) {
     int passed = 0, failed = 0;
+    run_test("INT_SIZE", sizeof(unsigned int)*8, 32) ? passed++ : failed++;
     puts("RFC Tests");
     // compare core steps against RFC implementation
     run_test("RFC_F", F(1, 2, 3), RFC_F(1, 2, 3)) ? passed++ : failed++;
