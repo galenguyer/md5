@@ -50,13 +50,13 @@ documentation and/or software.
 int main(int argc, char** argv) {
     int passed = 0, failed = 0;
     // compare core steps against RFC implementation
-    run_test("step F", F(1, 2, 3), (((1) & (2)) | ((~1) & (3)))) ? passed++ : failed++;
-    run_test("step G", G(1, 2, 3), (((1) & (3)) | ((2) & (~3)))) ? passed ++ : failed++;
-    run_test("step H", H(1, 2, 3), ((1) ^ (2) ^ (3))) ? passed++ : failed++;
-    run_test("step I", I(1, 2, 3), ((2) ^ ((1) | (~3)))) ? passed++ : failed++;
+    run_test("step F", F(1, 2, 3), REFERENCE_F(1, 2, 3)) ? passed++ : failed++;
+    run_test("step G", G(1, 2, 3), REFERENCE_G(1, 2, 3)) ? passed ++ : failed++;
+    run_test("step H", H(1, 2, 3), REFERENCE_H(1, 2, 3)) ? passed++ : failed++;
+    run_test("step I", I(1, 2, 3), REFERENCE_I(1, 2, 3)) ? passed++ : failed++;
 
     // compare ROTATE_LEFT against RFC implementation
-    run_test("rotate_left", ROTATE_LEFT(24, 2), (((24) << (2)) | ((24) >> (32-(2))))) ? passed++ : failed++;
+    run_test("rotate_left", ROTATE_LEFT(24, 2), REFERENCE_ROTATE_LEFT(24, 2)) ? passed++ : failed++;
 
     // compare steps
     int a = 1;
