@@ -1,3 +1,5 @@
+#include "md5.h"
+
 // The four core functions for MD5.
 // F and G are optmized per the Colin Plumb implementation.
 #define F(x, y, z) (z ^ (x & (y ^ z)))
@@ -12,3 +14,14 @@
     a = ROTATE_LEFT(a, s), \
     a += b \
 )
+
+void md5_init(struct md5_context* ctx)
+{
+    ctx->a = 0x67452301;
+    ctx->b = 0xefcdab89;
+    ctx->c = 0x98badcfe;
+    ctx->d = 0x10325476;
+
+    ctx->count[0] = 0;
+    ctx->count[1] = 0;
+}
