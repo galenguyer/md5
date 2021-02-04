@@ -2,12 +2,12 @@
 #include <string.h>
 #include "md5.h"
 
-int run_test(char* name, long result, long expected) {
-    if (expected == result) {
-        printf("TEST PASSED: %s: expected %li, got %li\n", name, expected, result);
+int run_test(char* name, char* result, char* expected) {
+    if (strcmp(expected, result)) {
+        printf("TEST PASSED: %s: expected %s, got %s\n", name, expected, result);
         return 1;
     } else {
-        printf("TEST FAILED: %s: expected %li, got %li\n", name, expected, result);
+        printf("TEST FAILED: %s: expected %s, got %s\n", name, expected, result);
         return 0;
     }
 }
@@ -126,23 +126,91 @@ int main(int argc, char** argv) {
     run_test("PLUMB_HH", STEP(H, a, 2, 3, 4, 5, 6, 7), PLUMB_MD5STEP(PLUMB_F3, plumb_a, 2, 3, 4, 5 + 7, 6)) ? passed++ : failed++;
     run_test("PLUMB_II", STEP(I, a, 2, 3, 4, 5, 6, 7), PLUMB_MD5STEP(PLUMB_F4, plumb_a, 2, 3, 4, 5 + 7, 6)) ? passed++ : failed++;
  */
+
     // Full tests
-    char* test_str = "a";
+    char* test_str = "";
     struct md5_context context;
     struct md5_digest digest;
 
     md5_init(&context);
     md5_update(&context, test_str, (unsigned long)strlen(test_str));
     md5_finalize(&context, &digest);
+    printf("md5(\"%s\") = ", test_str);
+    for(int i=0; i<sizeof(digest); i++)
+    {
+        printf("%2.2x", digest.bytes[i]);
+    }
+    puts(" should be d41d8cd98f00b204e9800998ecf8427e");
 
-    printf("md5(\"a\") = ");
+
+    test_str = "a";
+    
+    md5_init(&context);
+    md5_update(&context, test_str, (unsigned long)strlen(test_str));
+    md5_finalize(&context, &digest);
+    printf("md5(\"%s\") = ", test_str);
     for(int i=0; i<sizeof(digest); i++)
     {
         printf("%2.2x", digest.bytes[i]);
     }
     puts(" should be 0cc175b9c0f1b6a831c399e269772661");
 
-    printf("Tests Passed: %i\n", passed);
-    printf("Tests Failed: %i\n", failed);
+    test_str = "abc";
+    md5_init(&context);
+    md5_update(&context, test_str, (unsigned long)strlen(test_str));
+    md5_finalize(&context, &digest);
+    printf("md5(\"%s\") = ", test_str);
+    for(int i=0; i<sizeof(digest); i++)
+    {
+        printf("%2.2x", digest.bytes[i]);
+    }
+    puts(" should be 900150983cd24fb0d6963f7d28e17f72");
+
+    test_str = "message digest";
+    md5_init(&context);
+    md5_update(&context, test_str, (unsigned long)strlen(test_str));
+    md5_finalize(&context, &digest);
+    printf("md5(\"%s\") = ", test_str);
+    for(int i=0; i<sizeof(digest); i++)
+    {
+        printf("%2.2x", digest.bytes[i]);
+    }
+    puts(" should be f96b697d7cb7938d525a2f31aaf161d0");
+
+    test_str = "abcdefghijklmnopqrstuvwxyz";
+    md5_init(&context);
+    md5_update(&context, test_str, (unsigned long)strlen(test_str));
+    md5_finalize(&context, &digest);
+    printf("md5(\"%s\") = ", test_str);
+    for(int i=0; i<sizeof(digest); i++)
+    {
+        printf("%2.2x", digest.bytes[i]);
+    }
+    puts(" should be c3fcd3d76192e4007dfb496cca67e13b");
+
+    test_str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    md5_init(&context);
+    md5_update(&context, test_str, (unsigned long)strlen(test_str));
+    md5_finalize(&context, &digest);
+    printf("md5(\"%s\") = ", test_str);
+    for(int i=0; i<sizeof(digest); i++)
+    {
+        printf("%2.2x", digest.bytes[i]);
+    }
+    puts(" should be d174ab98d277d9f5a5611c2c9f419d9f");
+
+    test_str = "12345678901234567890123456789012345678901234567890123456789012345678901234567890";
+    md5_init(&context);
+    md5_update(&context, test_str, (unsigned long)strlen(test_str));
+    md5_finalize(&context, &digest);
+    printf("md5(\"%s\") = ", test_str);
+    for(int i=0; i<sizeof(digest); i++)
+    {
+        printf("%2.2x", digest.bytes[i]);
+    }
+    puts(" should be 57edf4a22be3c955ac49da2e2107b67a");
+
+    //printf("Tests Passed: %i\n", passed);
+    //printf("Tests Failed: %i\n", failed);
     return failed;
 }
