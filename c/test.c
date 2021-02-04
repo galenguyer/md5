@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "md5.c"
 
 int run_test(char* name, long result, long expected) {
@@ -91,7 +92,7 @@ documentation and/or software.
 
 int main(int argc, char** argv) {
     int passed = 0, failed = 0;
-    run_test("INT_SIZE", sizeof(unsigned int)*8, 32) ? passed++ : failed++;
+/*     run_test("INT_SIZE", sizeof(unsigned int)*8, 32) ? passed++ : failed++;
     puts("RFC Tests");
     // compare core steps against RFC implementation
     run_test("RFC_F", F(1, 2, 3), RFC_F(1, 2, 3)) ? passed++ : failed++;
@@ -124,6 +125,22 @@ int main(int argc, char** argv) {
     run_test("PLUMB_GG", STEP(G, a, 2, 3, 4, 5, 6, 7), PLUMB_MD5STEP(PLUMB_F2, plumb_a, 2, 3, 4, 5 + 7, 6)) ? passed++ : failed++;
     run_test("PLUMB_HH", STEP(H, a, 2, 3, 4, 5, 6, 7), PLUMB_MD5STEP(PLUMB_F3, plumb_a, 2, 3, 4, 5 + 7, 6)) ? passed++ : failed++;
     run_test("PLUMB_II", STEP(I, a, 2, 3, 4, 5, 6, 7), PLUMB_MD5STEP(PLUMB_F4, plumb_a, 2, 3, 4, 5 + 7, 6)) ? passed++ : failed++;
+ */
+    // Full tests
+    char* test_str = "a";
+    struct md5_context context;
+    struct md5_digest digest;
+
+    md5_init(&context);
+    md5_update(&context, test_str, (unsigned long)strlen(test_str));
+    md5_finalize(&context, &digest);
+
+    printf("md5(\"a\") = ");
+    for(int i=0; i<sizeof(digest); i++)
+    {
+        printf("%2.2x", digest.bytes[i]);
+    }
+    puts(" should be 0cc175b9c0f1b6a831c399e269772661");
 
     printf("Tests Passed: %i\n", passed);
     printf("Tests Failed: %i\n", failed);
