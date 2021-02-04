@@ -2,6 +2,8 @@
 #pragma GCC diagnostic ignored "-Wshift-count-negative"
 
 #include <memory.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "md5.h"
 
 // The four core functions for MD5.
@@ -29,16 +31,16 @@ void md5_init(struct md5_context* ctx) {
     ctx->count[1] = 0;
 }
 
-char* md5_transform(struct md5_context* ctx, unsigned const char* data, unsigned int size) {
-    char* ptr = (char*) data;
-    unsigned int  a, b, c, d, aa, bb, cc, dd;
+char* md5_transform(struct md5_context* ctx, const void* data, uintmax_t size) {
+    uint8_t* ptr = (uint8_t*) data;
+    uint32_t a, b, c, d, aa, bb, cc, dd;
 
     #define GET(n) (ctx->block[(n)])
-    #define SET(n) (ctx->block[(n)] =            \
-          ((unsigned int)ptr[(n)*4 + 0] << 0 )   \
-        | ((unsigned int)ptr[(n)*4 + 1] << 8 )   \
-        | ((unsigned int)ptr[(n)*4 + 2] << 16)   \
-        | ((unsigned int)ptr[(n)*4 + 3] << 24) )
+    #define SET(n) (ctx->block[(n)] =        \
+          ((uint32_t)ptr[(n)*4 + 0] << 0 )   \
+        | ((uint32_t)ptr[(n)*4 + 1] << 8 )   \
+        | ((uint32_t)ptr[(n)*4 + 2] << 16)   \
+        | ((uint32_t)ptr[(n)*4 + 3] << 24) )
 
     a = ctx->a;
     b = ctx->b;
@@ -138,15 +140,15 @@ char* md5_transform(struct md5_context* ctx, unsigned const char* data, unsigned
     return ptr;
 }
 
-void md5_update(struct md5_context* ctx, const char* buffer, unsigned int buffer_size) {
-    unsigned int saved_low = ctx->count[0];
-    unsigned int used;
-    unsigned int free;
+void md5_update(struct md5_context* ctx, const char* buffer, uint32_t buffer_size) {
+    uint32_t saved_low = ctx->count[0];
+    uint32_t used;
+    uint32_t free;
 
     if ((ctx->count[0] = ((saved_low+buffer_size) & 0x1fffffff)) < saved_low) {
         ctx->count[1]++;
     }
-    ctx->count[1] += (unsigned int)(buffer_size>>29);
+    ctx->count[1] += (uint32_t)(buffer_size>>29);
 
     used = saved_low & 0x3f;
 
@@ -159,7 +161,7 @@ void md5_update(struct md5_context* ctx, const char* buffer, unsigned int buffer
         }
 
         memcpy(&ctx->input[used], buffer, free);
-        buffer = (char*) buffer + free;
+        buffer = (uint8_t*) buffer + free;
         buffer_size -= free;
         md5_transform(ctx, ctx->input, 64);
     }
@@ -172,9 +174,9 @@ void md5_update(struct md5_context* ctx, const char* buffer, unsigned int buffer
 }
 
 void md5_finalize(struct md5_context* ctx, struct md5_digest* digest) {
-    unsigned int used = ctx->count[0] & 0x3f;
+    uint32_t used = ctx->count[0] & 0x3f;
     ctx->input[used++] = 0x80;
-    unsigned int free = 64 - used;
+    uint32_t free = 64 - used;
 
     if (free < 8) {
         memset(&ctx->input[used], 0, free);
@@ -186,31 +188,31 @@ void md5_finalize(struct md5_context* ctx, struct md5_digest* digest) {
     memset(&ctx->input[used], 0, free - 8);
 
     ctx->count[0] <<= 3;
-    ctx->input[56] = (unsigned char)(ctx->count[0]);
-    ctx->input[57] = (unsigned char)(ctx->count[0] >> 8);
-    ctx->input[58] = (unsigned char)(ctx->count[0] >> 16);
-    ctx->input[59] = (unsigned char)(ctx->count[0] >> 24);
-    ctx->input[60] = (unsigned char)(ctx->count[1]);
-    ctx->input[61] = (unsigned char)(ctx->count[1] >> 8);
-    ctx->input[62] = (unsigned char)(ctx->count[1] >> 16);
-    ctx->input[63] = (unsigned char)(ctx->count[1] >> 24);
+    ctx->input[56] = (uint8_t)(ctx->count[0]);
+    ctx->input[57] = (uint8_t)(ctx->count[0] >> 8);
+    ctx->input[58] = (uint8_t)(ctx->count[0] >> 16);
+    ctx->input[59] = (uint8_t)(ctx->count[0] >> 24);
+    ctx->input[60] = (uint8_t)(ctx->count[1]);
+    ctx->input[61] = (uint8_t)(ctx->count[1] >> 8);
+    ctx->input[62] = (uint8_t)(ctx->count[1] >> 16);
+    ctx->input[63] = (uint8_t)(ctx->count[1] >> 24);
 
     md5_transform(ctx, ctx->input, 64);
 
-    digest->bytes[0]  = (unsigned char)(ctx->a);
-    digest->bytes[1]  = (unsigned char)(ctx->a >> 8);
-    digest->bytes[2]  = (unsigned char)(ctx->a >> 16);
-    digest->bytes[3]  = (unsigned char)(ctx->a >> 24);
-    digest->bytes[4]  = (unsigned char)(ctx->b);
-    digest->bytes[5]  = (unsigned char)(ctx->b >> 8);
-    digest->bytes[6]  = (unsigned char)(ctx->b >> 16);
-    digest->bytes[7]  = (unsigned char)(ctx->b >> 24);
-    digest->bytes[8]  = (unsigned char)(ctx->c);
-    digest->bytes[9]  = (unsigned char)(ctx->c >> 8);
-    digest->bytes[10] = (unsigned char)(ctx->c >> 16);
-    digest->bytes[11] = (unsigned char)(ctx->c >> 24);
-    digest->bytes[12] = (unsigned char)(ctx->d);
-    digest->bytes[13] = (unsigned char)(ctx->d >> 8);
-    digest->bytes[14] = (unsigned char)(ctx->d >> 16);
-    digest->bytes[15] = (unsigned char)(ctx->d >> 24);
+    digest->bytes[0]  = (uint8_t)(ctx->a);
+    digest->bytes[1]  = (uint8_t)(ctx->a >> 8);
+    digest->bytes[2]  = (uint8_t)(ctx->a >> 16);
+    digest->bytes[3]  = (uint8_t)(ctx->a >> 24);
+    digest->bytes[4]  = (uint8_t)(ctx->b);
+    digest->bytes[5]  = (uint8_t)(ctx->b >> 8);
+    digest->bytes[6]  = (uint8_t)(ctx->b >> 16);
+    digest->bytes[7]  = (uint8_t)(ctx->b >> 24);
+    digest->bytes[8]  = (uint8_t)(ctx->c);
+    digest->bytes[9]  = (uint8_t)(ctx->c >> 8);
+    digest->bytes[10] = (uint8_t)(ctx->c >> 16);
+    digest->bytes[11] = (uint8_t)(ctx->c >> 24);
+    digest->bytes[12] = (uint8_t)(ctx->d);
+    digest->bytes[13] = (uint8_t)(ctx->d >> 8);
+    digest->bytes[14] = (uint8_t)(ctx->d >> 16);
+    digest->bytes[15] = (uint8_t)(ctx->d >> 24);
 }

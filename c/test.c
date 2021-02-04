@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "md5.c"
+#include "md5.h"
 
 int run_test(char* name, long result, long expected) {
     if (expected == result) {
