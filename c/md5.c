@@ -13,7 +13,7 @@
 
 #define ROTATE_LEFT(x, s) (x<<s | x>>(32-s))
 
-#define STEP(f, a, b, c, d, x, s, t) ( \
+#define STEP(f, a, b, c, d, x, t, s) ( \
     a += f(b, c, d) + x + t, \
     a = ROTATE_LEFT(a, s), \
     a += b \
