@@ -31,7 +31,7 @@ void md5_init(struct md5_context* ctx) {
     ctx->count[1] = 0;
 }
 
-char* md5_transform(struct md5_context* ctx, const void* data, uintmax_t size) {
+uint8_t* md5_transform(struct md5_context* ctx, const void* data, uintmax_t size) {
     uint8_t* ptr = (uint8_t*) data;
     uint32_t a, b, c, d, aa, bb, cc, dd;
 
@@ -140,7 +140,7 @@ char* md5_transform(struct md5_context* ctx, const void* data, uintmax_t size) {
     return ptr;
 }
 
-void md5_update(struct md5_context* ctx, const char* buffer, uint32_t buffer_size) {
+void md5_update(struct md5_context* ctx, const void* buffer, uint32_t buffer_size) {
     uint32_t saved_low = ctx->count[0];
     uint32_t used;
     uint32_t free;
