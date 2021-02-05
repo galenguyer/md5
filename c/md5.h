@@ -21,3 +21,4 @@ struct md5_digest {
 void md5_init(struct md5_context *ctx);
 void md5_update(struct md5_context* ctx, const void* buffer, unsigned int buffer_size);
 void md5_finalize(struct md5_context* ctx, struct md5_digest* digest);
+char* md5(const char* input);
