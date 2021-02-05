@@ -8,14 +8,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: make
-      run: make test
-      working-directory: ./c
-    - name: test
-      run: ./test
-      working-directory: ./c
+      run: make
+    - name: run tests
+      run: ./tests
