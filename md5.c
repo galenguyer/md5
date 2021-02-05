@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include "md5.h"
 
-// The four core functions for MD5.
-// F and G are optmized per the Colin Plumb implementation.
 #define F(x, y, z) (z ^ (x & (y ^ z)))
 #define G(x, y, z) (y ^ (z & (x ^ y)))
 #define H(x, y, z) (x ^ y ^ z)
@@ -232,7 +230,6 @@ char* md5(const char* input) {
     for(int i=0; i<sizeof(digest); i++)
     {
         sprintf(&output[i*2], "%2.2x", digest.bytes[i]);
-        //output[i] = digest.bytes[i];
     }
 
     return output;
