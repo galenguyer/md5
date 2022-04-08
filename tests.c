@@ -30,6 +30,15 @@ int run_tests() {
         md5("12345678901234567890123456789012345678901234567890123456789012345678901234567890"), \
         "57edf4a22be3c955ac49da2e2107b67a") ? passed++ : failed++;
 
+    char *str = "the quick brown fox jumped over the lazy dog.\n"
+        "the quick brown fox jumped over the lazy dog.\n"
+        "the quick brown fox jumped over the lazy dog.\n"
+        "the quick brown fox jumped over the lazy dog.\n"
+        "the quick brown fox jumped over the lazy dog.\n"
+        "the quick brown fox jumped over the lazy dog.\n";
+
+    run_test(str, md5(str), "590769b959d6d65ccb16c7fb0decc950") ? passed++ : failed++;
+
     printf("Tests Passed: %i\n", passed);
     printf("Tests Failed: %i\n", failed);
     return failed;

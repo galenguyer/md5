@@ -167,6 +167,7 @@ void md5_update(struct md5_context* ctx, const void* buffer, uint32_t buffer_siz
 
     if (buffer_size >= 64) {
         buffer = md5_transform(ctx, buffer, buffer_size & ~(unsigned long)0x3f);
+        buffer_size = buffer_size % 64;
     }
 
     memcpy(ctx->input, buffer, buffer_size);
